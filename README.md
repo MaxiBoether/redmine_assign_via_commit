@@ -1,11 +1,17 @@
-This plug-in allows you to change the assignee via your commit message.
+This plug-in allows you to set the assignee via your commit message
+-------------------------------------------------------------------
 
-Examples:
+Simply add a ``>`` and the desired login name after your reference to the
+corresponding commit.
 
-  This commit refs #1, #2 and fixes #3 >JohnDoe
-  Implement feature #1234 @2h >JohnDoe
+Examples
+--------
 
-Implementation:
+  This commit refs #1, #2 and fixes #3 >johndoe
+  Implement feature #1234 @2,5h >johndoe
+
+Implementation
+--------------
 
   This plug in patches a hook into ``scan_for_issues`` of the Redmine
   model ``Changeset`` (for future flexibility) and then attaches a
