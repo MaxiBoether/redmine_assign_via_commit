@@ -13,6 +13,12 @@ or
 
 ```Implement feature #1234 @2,5h >johndoe```
 
+Installation
+------------
+
+Just follow the plugin installation procedure at
+http://www.redmine.org/projects/redmine/wiki/Plugins#Installing-a-plugin.
+
 Implementation
 --------------
 
