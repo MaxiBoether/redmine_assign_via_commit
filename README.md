@@ -16,8 +16,7 @@ or
 Installation
 ------------
 
-Just follow the plugin installation procedure at
-http://www.redmine.org/projects/redmine/wiki/Plugins#Installing-a-plugin.
+Just follow the [plugin installation procedure from the Redmine Wiki](http://www.redmine.org/projects/redmine/wiki/Plugins#Installing-a-plugin).
 
 Implementation
 --------------
