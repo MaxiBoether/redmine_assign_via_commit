@@ -10,10 +10,19 @@ module RedmineAssignViaCommit
         changeset = context[:changeset]
         commit_msg = changeset.comments
 
+        # skip if importing old commits
+        repository_created_on = changeset.repository.created_on
+        changeset_committed_on = changeset.committed_on
+        return unless repository_created_on &&
+                      changeset_committed_on &&
+                      repository_created_on < changeset_committed_on
+
+        # get validator of Redmine's User model
         login_format_validators = User.validators_on(:login).select{ |v|
           v.is_a? ActiveModel::Validations::FormatValidator
         }
 
+        # get regex from validator
         login_re = nil
         if login_format_validators.length == 1
           begin
@@ -26,6 +35,7 @@ module RedmineAssignViaCommit
         end
 
         if !login_re
+          # use fallback regex if not retrievable from validator
           Rails.logger.error "Cannot reliably determine regex to " +
             "detect login names. Using a fallback. Please file a bug " +
             "report for the redmine_assign_via_commit plugin."
