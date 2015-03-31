@@ -51,7 +51,7 @@ module RedmineAssignViaCommit
         # regex inspired by the on in
         # Redmine's Changeset.scan_comment_for_issue_ids
         commit_msg.scan(
-          /#(\d+)(\s+@#{Changeset::TIMELOG_RE})?\s+>(#{login_re})/
+          /#(\d+)(\s+@#{Changeset::TIMELOG_RE})?\s+>(#{login_re})/i
         ).each do |m|
 
           issue = changeset.find_referenced_issue_by_id(m[0].to_i)
