@@ -51,24 +51,27 @@ module RedmineAssignViaCommit
         # regex inspired by the on in
         # Redmine's Changeset.scan_comment_for_issue_ids
         commit_msg.scan(
-          /#(\d+)(\s+@#{Changeset::TIMELOG_RE})?\s+>(#{login_re})/i
+          /((?:#\d+\s+)+)(\s+@#{Changeset::TIMELOG_RE})?\s+>(#{login_re})/i
         ).each do |m|
-
-          issue = changeset.find_referenced_issue_by_id(m[0].to_i)
-          next unless issue
 
           new_assignee = User.find_by_login(m[-1])
           next unless new_assignee
 
-          next unless issue.assignable_users.include? new_assignee
+          m[0].split("#").drop(1).each do |issue_id_s|
 
-          Rails.logger.info "Assigning #{new_assignee.login} to \##{issue.id} because of commit message '#{commit_msg}'."
+            issue_id = issue_id_s.to_i
+            issue = changeset.find_referenced_issue_by_id(issue_id)
 
-          issue.init_journal(changeset.user) if changeset.user
+            next unless issue
+            next unless issue.assignable_users.include? new_assignee
 
-          issue.assigned_to = new_assignee
-          issue.save
+            Rails.logger.info "Assigning #{new_assignee.login} to \##{issue.id} because of commit message '#{commit_msg}'."
 
+            issue.init_journal(changeset.user) if changeset.user
+
+            issue.assigned_to = new_assignee
+            issue.save
+          end
         end
       end
     end
