@@ -67,7 +67,14 @@ module RedmineAssignViaCommit
 
             Rails.logger.info "Assigning #{new_assignee.login} to \##{issue.id} because of commit message '#{commit_msg}'."
 
-            issue.init_journal(changeset.user) if changeset.user
+            issue.init_journal(
+              changeset.user || User.anonymous,
+              ll(
+                Setting.default_language,
+                :text_status_changed_by_changeset,
+                changeset.text_tag(issue.project)
+              )
+            )
 
             issue.assigned_to = new_assignee
             issue.save
