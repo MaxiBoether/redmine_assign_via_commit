@@ -51,7 +51,7 @@ module RedmineAssignViaCommit
         # regex inspired by the on in
         # Redmine's Changeset.scan_comment_for_issue_ids
         commit_msg.scan(
-          /((?:#\d+\s+)+)(\s+@#{Changeset::TIMELOG_RE})?\s+>(#{login_re})/i
+          /((?:\s+#\d+)+)(\s+@#{Changeset::TIMELOG_RE})?\s+>(#{login_re})/i
         ).each do |m|
 
           new_assignee = User.find_by_login(m[-1])
