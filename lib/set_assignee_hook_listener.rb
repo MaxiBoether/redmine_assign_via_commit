@@ -75,13 +75,13 @@ module RedmineAssignViaCommit
               next
             end
 
-            Rails.logger.info "Assigning #{new_assignee.login} to \##{issue.id}."
-
             # skip if nothing changes
             if issue.assigned_to == new_assignee
               Rails.logger.info "User #{new_assignee.login} already assigned to issue \##{issue.id}."
               next
             end
+
+            Rails.logger.info "Assigning #{new_assignee.login} to \##{issue.id}."
 
             issue.init_journal(
               changeset.user || User.anonymous,
