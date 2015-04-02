@@ -53,22 +53,35 @@ module RedmineAssignViaCommit
         commit_msg.scan(
           /((?:\s+#\d+)+)(\s+@#{Changeset::TIMELOG_RE})?\s+>(#{login_re})/i
         ).each do |m|
+          Rails.logger.info "Commit message '#{commit_msg}' matches format to set a new assignee."
 
           new_assignee = User.find_by_login(m[-1])
-          next unless new_assignee
+          if not new_assignee
+            Rails.logger.info "Cannot find user #{m[-1]}."
+            next
+          end
 
           m[0].split("#").drop(1).each do |issue_id_s|
 
             issue_id = issue_id_s.to_i
             issue = changeset.find_referenced_issue_by_id(issue_id)
+            if not issue
+              Rails.logger.info "Cannot find issue \##{issue_id}."
+              next
+            end
 
-            next unless issue
-            next unless issue.assignable_users.include? new_assignee
+            if not issue.assignable_users.include? new_assignee
+              Rails.logger.info "User #{new_assignee.login} not assignable to issue \##{issue.id}."
+              next
+            end
 
-            Rails.logger.info "Assigning #{new_assignee.login} to \##{issue.id} because of commit message '#{commit_msg}'."
+            Rails.logger.info "Assigning #{new_assignee.login} to \##{issue.id}."
 
             # skip if nothing changes
-            next if issue.assigned_to == new_assignee
+            if issue.assigned_to == new_assignee
+              Rails.logger.info "User #{new_assignee.login} already assigned to issue \##{issue.id}."
+              next
+            end
 
             issue.init_journal(
               changeset.user || User.anonymous,
