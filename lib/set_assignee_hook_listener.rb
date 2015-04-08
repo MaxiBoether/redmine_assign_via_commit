@@ -6,6 +6,7 @@ module RedmineAssignViaCommit
       FALLBACK_LOGIN_RE = /[a-z0-9_\-@\.]*/i
 
       def model_changeset_scan_commit_for_issues (context={})
+        Rails.logger.info "Assign via commit message plugin called with context '#{context}'."
         return unless context[:changeset]
         changeset = context[:changeset]
         commit_msg = changeset.comments
