@@ -13,9 +13,9 @@ module RedmineAssignViaCommit
         # skip if importing old commits
         repository_created_on = changeset.repository.created_on
         changeset_committed_on = changeset.committed_on
-        return if repository_created_on &&
-                  changeset_committed_on &&
-                  repository_created_on > changeset_committed_on
+        return if repository_created_on.present? &&
+                  changeset_committed_on.present? &&
+                  changeset_committed_on < repository_created_on
 
         # get validator of Redmine's User model
         login_format_validators = User.validators_on(:login).select{ |v|
