@@ -52,7 +52,7 @@ module RedmineAssignViaCommit
         # regex inspired by the on in
         # Redmine's Changeset.scan_comment_for_issue_ids
         commit_msg.scan(
-          /((?:\s+#\d+)+)(\s+@#{Changeset::TIMELOG_RE})?\s+>(#{login_re})/i
+          /((?:(?:^|\s+)#\d+)+)(\s+@#{Changeset::TIMELOG_RE})?\s+>(#{login_re})/i
         ).each do |m|
           Rails.logger.info "Commit message '#{commit_msg}' matches format to set a new assignee."
 
