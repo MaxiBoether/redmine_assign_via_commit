@@ -9,7 +9,8 @@ module RedmineAssignViaCommit
 
         base.class_eval do
           unloadable
-          alias_method_chain :scan_for_issues, :hook
+          alias_method :scan_for_issues_without_hook, :scan_for_issues
+          alias_method :scan_for_issues, :scan_for_issues_with_hook
         end
       end
 
